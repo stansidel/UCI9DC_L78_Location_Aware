@@ -10,12 +10,13 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
-    var locationManager = CLLocationManager()
+    var locationManager: CLLocationManager!
     @IBOutlet weak var infoLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
@@ -46,8 +47,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 if error != nil {
                     print("Reverse geocoder failed with error: \(error!.localizedDescription)")
                 } else {
-                    if let pm = placemarks?.first {
-                        let address = "\(pm.locality ?? "") \(pm.postalCode ?? ""), \(pm.administrativeArea ?? ""), \(pm.country ?? "")"
+                    if let pmo = placemarks?.first {
+                        let pm = CLPlacemark(placemark: pmo)
+                        let address = "\(pm.subThoroughfare ?? "") \(pm.thoroughfare ?? "") \(pm.subLocality ?? "") \(pm.postalCode ?? ""), \(pm.subAdministrativeArea ?? ""), \(pm.country ?? "")"
                         text += "address: \(address)"
                     } else {
                         print("Problem with the data received from geocoder")
